@@ -43,8 +43,8 @@ describe("Main tests", () => {
 
     let queryParams;
 
-    yah.on("GET", "/queryParams", ($request) => {
-      return new Response(200, queryParams = $request.queryParams);
+    yah.on("GET", "/queryParams", (context) => {
+      return new Response(200, queryParams = context.queryParams);
     });
 
     const response = await axiosInstance.get("/queryParams?a=2&b=3");
@@ -56,12 +56,12 @@ describe("Main tests", () => {
   // Test middleware and context
   test("GET /middleware", async() => {
 
-    yah.use(($request) => {
-      $request.context.set("myProperty", 123);
+    yah.use((context) => {
+      context.data.set("myProperty", 123);
     });
 
-    yah.on("GET", "/middleware", ($request) => {
-      expect($request.context.get("myProperty")).toBe(123);
+    yah.on("GET", "/middleware", (context) => {
+      expect(context.data.get("myProperty")).toBe(123);
       return new Response(200, "OK");
     });
 
@@ -74,8 +74,8 @@ describe("Main tests", () => {
 
     const postData = {a: 1, b: 2};
 
-    yah.on("POST", "/", ($request) => {
-      return new Response(200, JSON.stringify($request.fields), {
+    yah.on("POST", "/", (context) => {
+      return new Response(200, JSON.stringify(context.fields), {
         "Content-Type": "application/json"
       });
     }, {});

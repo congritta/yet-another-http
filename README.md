@@ -21,8 +21,7 @@ https://yah.congritta.com
 * Written in Typescript;
 * Various HTTP servers with instances of Server class;
 * Middleware support;
-* Context over middlewares and handlers support;
-* Custom Request and Response objects with only needed stuff;
+* Context data over middlewares and handlers support;
 * Can read POST data out of box. _JSON_, _multipart/form-data_, _urlencoded_ supported;
 * Plugin API;
 * Built-in error handling;

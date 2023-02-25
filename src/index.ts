@@ -8,13 +8,13 @@
 import formidable from "formidable";
 import http from "http";
 import {Readable} from "stream";
-import Request from "./entities/Request";
+import Context from "./entities/Context";
 import Response from "./entities/Response";
 import YahError from "./entities/YahError";
 
 export type HTTP_METHODS = "GET"|"POST"|"PUT"|"DELETE"
 export type MiddlewareResult = Response|null|void|Promise<MiddlewareResult>
-export type MiddlewareHandler = (request: Request) => MiddlewareResult
+export type MiddlewareHandler = (request: Context) => MiddlewareResult
 export type ErrorHandler = (error: YahError, request: http.IncomingMessage, response: http.ServerResponse) => void
 
 export interface Middleware {
@@ -38,8 +38,8 @@ export default class Server {
     this.server = http.createServer((request, response) => {
       try {
 
-        // Build a Request object
-        const $request = new Request(
+        // Build a Context object
+        const $context = new Context(
           request,
           request.headers["x-forwarded-for"] as string ?? request.socket.remoteAddress ?? null,
           {},
@@ -47,7 +47,7 @@ export default class Server {
         );
 
         // Handle request
-        this._doMiddleware(0, $request, request, response);
+        this._doMiddleware(0, $context, request, response);
       }
       catch(error) {
         this._onError(error, request, response);
@@ -89,14 +89,21 @@ export default class Server {
     this.onErrorHandler = callback;
   }
 
-  private _doMiddleware(i: number, $request: Request, request: http.IncomingMessage, response: http.ServerResponse) {
+  private _doMiddleware(i: number, $context: Context, request: http.IncomingMessage, response: http.ServerResponse) {
     const handleMiddleware = (middlewareResult: MiddlewareResult) => {
 
       // Handle regular Response object
       if(middlewareResult instanceof Response) {
         response.statusCode = middlewareResult.statusCode;
 
-        // Set headers
+        /* Set headers */
+
+        for(const [header, headerValue] of Object.entries($context.responseHeaders)) {
+          if(headerValue) {
+            response.setHeader(header, headerValue);
+          }
+        }
+
         for(const [header, headerValue] of Object.entries(middlewareResult.headers)) {
           if(headerValue) {
             response.setHeader(header, headerValue);
@@ -118,7 +125,7 @@ export default class Server {
       }
 
       // Run next middleware
-      this._doMiddleware(i + 1, $request, request, response);
+      this._doMiddleware(i + 1, $context, request, response);
     };
 
     // Check if middleware exists
@@ -132,7 +139,7 @@ export default class Server {
       request.url as string)) {
 
       // Handle requests with body
-      if(["POST", "PUT"].includes(request.method as string) && !$request.isParsed && middleware.formidableOptions) {
+      if(["POST", "PUT"].includes(request.method as string) && !$context.isParsed && middleware.formidableOptions) {
 
         (new formidable.IncomingForm(middleware.formidableOptions)).parse(request, (error, fields, files) => {
           if(error) {
@@ -140,12 +147,12 @@ export default class Server {
           }
 
           // Set request fields and files
-          $request.setFields(fields);
-          $request.setFiles(files);
-          $request.setIsParsed();
+          $context.setFields(fields);
+          $context.setFiles(files);
+          $context.setIsParsed();
 
           // Handle request (call it`s callback)
-          const middlewareResult = middleware.handler($request);
+          const middlewareResult = middleware.handler($context);
           if(middlewareResult instanceof Promise) {
             middlewareResult.then(handleMiddleware);
           }
@@ -159,7 +166,7 @@ export default class Server {
       else {
 
         // Handle request (call it`s callback)
-        const middlewareResult = middleware.handler($request);
+        const middlewareResult = middleware.handler($context);
         if(middlewareResult instanceof Promise) {
           middlewareResult.then(handleMiddleware);
         }
@@ -171,7 +178,7 @@ export default class Server {
 
     // Run next middleware
     else {
-      this._doMiddleware(i + 1, $request, request, response);
+      this._doMiddleware(i + 1, $context, request, response);
     }
   }
 
@@ -211,5 +218,5 @@ export default class Server {
 
 }
 
-export {default as Request} from "./entities/Request";
+export {default as Context} from "./entities/Context";
 export {default as Response} from "./entities/Response";

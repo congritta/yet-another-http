@@ -9,10 +9,10 @@ import formidable from "formidable";
 import http, {IncomingHttpHeaders} from "http";
 import qs, {ParsedQs} from "qs";
 
-export default class Request {
+export default class Context {
   readonly method: string;
   readonly path: string;
-  readonly context = new Map();
+  readonly data = new Map();
   readonly headers: IncomingHttpHeaders;
   readonly ip: string;
   readonly queryParams: ParsedQs;
@@ -57,5 +57,15 @@ export default class Request {
 
   setIsParsed() {
     this._isParsed = true;
+  }
+
+  private _responseHeaders: http.OutgoingHttpHeaders = {};
+
+  get responseHeaders() {
+    return this._responseHeaders;
+  }
+
+  setResponseHeaders(headers: http.OutgoingHttpHeaders) {
+    this._responseHeaders = headers;
   }
 }
