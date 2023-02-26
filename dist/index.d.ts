@@ -1,12 +1,12 @@
 /// <reference types="node" />
 import formidable from "formidable";
 import http from "http";
-import Request from "./entities/Request";
+import Context from "./entities/Context";
 import Response from "./entities/Response";
 import YahError from "./entities/YahError";
 export type HTTP_METHODS = "GET" | "POST" | "PUT" | "DELETE";
 export type MiddlewareResult = Response | null | void | Promise<MiddlewareResult>;
-export type MiddlewareHandler = (request: Request) => MiddlewareResult;
+export type MiddlewareHandler = (request: Context) => MiddlewareResult;
 export type ErrorHandler = (error: YahError, request: http.IncomingMessage, response: http.ServerResponse) => void;
 export interface Middleware {
     slug: string | null;
@@ -31,5 +31,5 @@ export default class Server {
     private _parseSlug;
     private _onError;
 }
-export { default as Request } from "./entities/Request";
+export { default as Context } from "./entities/Context";
 export { default as Response } from "./entities/Response";

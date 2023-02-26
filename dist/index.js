@@ -3,11 +3,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Response = exports.Request = void 0;
+exports.Response = exports.Context = void 0;
 const formidable_1 = __importDefault(require("formidable"));
 const http_1 = __importDefault(require("http"));
 const stream_1 = require("stream");
-const Request_1 = __importDefault(require("./entities/Request"));
+const Context_1 = __importDefault(require("./entities/Context"));
 const Response_1 = __importDefault(require("./entities/Response"));
 const YahError_1 = __importDefault(require("./entities/YahError"));
 class Server {
@@ -18,8 +18,8 @@ class Server {
         this.host = host;
         this.server = http_1.default.createServer((request, response) => {
             try {
-                const $request = new Request_1.default(request, request.headers["x-forwarded-for"] ?? request.socket.remoteAddress ?? null, {}, {});
-                this._doMiddleware(0, $request, request, response);
+                const $context = new Context_1.default(request, request.headers["x-forwarded-for"] ?? request.socket.remoteAddress ?? null, {}, {});
+                this._doMiddleware(0, $context, request, response);
             }
             catch (error) {
                 this._onError(error, request, response);
@@ -54,10 +54,15 @@ class Server {
     setOnErrorHandler(callback) {
         this.onErrorHandler = callback;
     }
-    _doMiddleware(i, $request, request, response) {
+    _doMiddleware(i, $context, request, response) {
         const handleMiddleware = (middlewareResult) => {
             if (middlewareResult instanceof Response_1.default) {
                 response.statusCode = middlewareResult.statusCode;
+                for (const [header, headerValue] of Object.entries($context.responseHeaders)) {
+                    if (headerValue) {
+                        response.setHeader(header, headerValue);
+                    }
+                }
                 for (const [header, headerValue] of Object.entries(middlewareResult.headers)) {
                     if (headerValue) {
                         response.setHeader(header, headerValue);
@@ -73,22 +78,22 @@ class Server {
             else if (middlewareResult === null) {
                 return;
             }
-            this._doMiddleware(i + 1, $request, request, response);
+            this._doMiddleware(i + 1, $context, request, response);
         };
         const middleware = this.middlewares[i];
         if (!middleware) {
             throw new YahError_1.default("Middleware not found", 404, request, response);
         }
         if (!middleware.slug || this._parseSlug(middleware.slug).method === request.method && this._parseSlug(middleware.slug).path === this._getPathFromUrl(request.url)) {
-            if (["POST", "PUT"].includes(request.method) && !$request.isParsed && middleware.formidableOptions) {
+            if (["POST", "PUT"].includes(request.method) && !$context.isParsed && middleware.formidableOptions) {
                 (new formidable_1.default.IncomingForm(middleware.formidableOptions)).parse(request, (error, fields, files) => {
                     if (error) {
                         throw error;
                     }
-                    $request.setFields(fields);
-                    $request.setFiles(files);
-                    $request.setIsParsed();
-                    const middlewareResult = middleware.handler($request);
+                    $context.setFields(fields);
+                    $context.setFiles(files);
+                    $context.setIsParsed();
+                    const middlewareResult = middleware.handler($context);
                     if (middlewareResult instanceof Promise) {
                         middlewareResult.then(handleMiddleware);
                     }
@@ -98,7 +103,7 @@ class Server {
                 });
             }
             else {
-                const middlewareResult = middleware.handler($request);
+                const middlewareResult = middleware.handler($context);
                 if (middlewareResult instanceof Promise) {
                     middlewareResult.then(handleMiddleware);
                 }
@@ -108,7 +113,7 @@ class Server {
             }
         }
         else {
-            this._doMiddleware(i + 1, $request, request, response);
+            this._doMiddleware(i + 1, $context, request, response);
         }
     }
     _getPathFromUrl(url) {
@@ -139,7 +144,7 @@ class Server {
     }
 }
 exports.default = Server;
-var Request_2 = require("./entities/Request");
-Object.defineProperty(exports, "Request", { enumerable: true, get: function () { return __importDefault(Request_2).default; } });
+var Context_2 = require("./entities/Context");
+Object.defineProperty(exports, "Context", { enumerable: true, get: function () { return __importDefault(Context_2).default; } });
 var Response_2 = require("./entities/Response");
 Object.defineProperty(exports, "Response", { enumerable: true, get: function () { return __importDefault(Response_2).default; } });
