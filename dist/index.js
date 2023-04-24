@@ -98,7 +98,7 @@ class Server {
                     $context.setIsParsed();
                     const middlewareResult = middleware.handler($context);
                     if (middlewareResult instanceof Promise) {
-                        middlewareResult.then(handleMiddleware);
+                        middlewareResult.then(handleMiddleware).catch((error) => this._onError(error, request, response));
                     }
                     else {
                         handleMiddleware(middlewareResult);
@@ -108,7 +108,7 @@ class Server {
             else {
                 const middlewareResult = middleware.handler($context);
                 if (middlewareResult instanceof Promise) {
-                    middlewareResult.then(handleMiddleware);
+                    middlewareResult.then(handleMiddleware).catch((error) => this._onError(error, request, response));
                 }
                 else {
                     handleMiddleware(middlewareResult);

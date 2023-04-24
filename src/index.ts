@@ -154,7 +154,7 @@ export default class Server {
           // Handle request (call it`s callback)
           const middlewareResult = middleware.handler($context);
           if(middlewareResult instanceof Promise) {
-            middlewareResult.then(handleMiddleware);
+            middlewareResult.then(handleMiddleware).catch((error) => this._onError(error, request, response));
           }
           else {
             handleMiddleware(middlewareResult);
@@ -168,7 +168,7 @@ export default class Server {
         // Handle request (call it`s callback)
         const middlewareResult = middleware.handler($context);
         if(middlewareResult instanceof Promise) {
-          middlewareResult.then(handleMiddleware);
+          middlewareResult.then(handleMiddleware).catch((error) => this._onError(error, request, response));
         }
         else {
           handleMiddleware(middlewareResult);
