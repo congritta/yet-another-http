@@ -1,6 +1,11 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-yarn test \
+yarn run lint \
 && rm -rf dist \
-&& yarn build
+&& rm -f .tsbuildinfo \
+&& yarn run build \
+\
+&& git add . \
+\
+&& echo "✅ Checks done. Making a commit..."

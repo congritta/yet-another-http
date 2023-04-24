@@ -1,7 +1,7 @@
 {
   "env": {
-    "browser": true,
-    "es2021": true
+    "es2021": true,
+    "node": true
   },
   "extends": [
     "eslint:recommended",
@@ -15,5 +15,41 @@
   },
   "plugins": [
     "@typescript-eslint"
-  ]
+  ],
+  "rules": {
+    "array-callback-return": [2, {"allowImplicit": true}],
+    "no-await-in-loop": 2,
+    "no-constant-binary-expression": 1,
+    "no-constructor-return": 2,
+    "no-duplicate-imports": 2,
+    "no-new-native-nonconstructor": 2,
+    "no-promise-executor-return": 2,
+    "no-self-compare": 2,
+    "no-template-curly-in-string": 1,
+    "no-unmodified-loop-condition": 1,
+    "no-unreachable-loop": 1,
+    "no-unused-private-class-members": 1,
+    "no-use-before-define": 1,
+    "require-atomic-updates": 1,
+
+    "block-scoped-var": 2,
+    "default-case": 2,
+    "default-case-last": 1,
+    "default-param-last": 2,
+    "eqeqeq": 2,
+    "grouped-accessor-pairs": 1,
+    "no-confusing-arrow": 1,
+    "no-eval": 2,
+    "no-extend-native": 1,
+    "no-implied-eval": 2,
+    "no-invalid-this": 1,
+    "no-label-var": 1,
+    "no-lonely-if": 1,
+    "no-mixed-operators": [1, {"allowSamePrecedence": true}],
+    "no-undefined": 2,
+    "no-var": 1,
+    "prefer-const": 1,
+    "require-await": 1,
+    "require-unicode-regexp": 1
+  }
 }

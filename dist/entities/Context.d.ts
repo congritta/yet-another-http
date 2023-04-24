@@ -23,3 +23,4 @@ export default class Context {
     get responseHeaders(): http.OutgoingHttpHeaders;
     setResponseHeaders(headers: http.OutgoingHttpHeaders): void;
 }
+//# sourceMappingURL=Context.d.ts.map

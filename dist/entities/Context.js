@@ -5,10 +5,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const qs_1 = __importDefault(require("qs"));
 class Context {
+    method;
+    path;
+    data = new Map();
+    headers;
+    ip;
+    queryParams;
     constructor(request, ip, fields, files) {
-        this.data = new Map();
-        this._isParsed = false;
-        this._responseHeaders = {};
         this.method = request.method.toUpperCase();
         this.path = request.url.replace(/\w(\/)$/i, "").split("?")[0];
         this.headers = request.headers;
@@ -18,12 +21,15 @@ class Context {
         const queryString = request.url.split("?")[1];
         this.queryParams = queryString ? qs_1.default.parse(queryString) : {};
     }
+    _fields;
     get fields() {
         return this._fields;
     }
+    _files;
     get files() {
         return this._files;
     }
+    _isParsed = false;
     get isParsed() {
         return this._isParsed;
     }
@@ -36,6 +42,7 @@ class Context {
     setIsParsed() {
         this._isParsed = true;
     }
+    _responseHeaders = {};
     get responseHeaders() {
         return this._responseHeaders;
     }
@@ -44,3 +51,4 @@ class Context {
     }
 }
 exports.default = Context;
+//# sourceMappingURL=Context.js.map

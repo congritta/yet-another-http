@@ -11,9 +11,12 @@ const Context_1 = __importDefault(require("./entities/Context"));
 const Response_1 = __importDefault(require("./entities/Response"));
 const YahError_1 = __importDefault(require("./entities/YahError"));
 class Server {
+    port;
+    host;
+    server;
+    middlewares = [];
+    onErrorHandler = null;
     constructor(port, host = "127.0.0.1") {
-        this.middlewares = [];
-        this.onErrorHandler = null;
         this.port = port;
         this.host = host;
         this.server = http_1.default.createServer((request, response) => {
@@ -148,3 +151,4 @@ var Context_2 = require("./entities/Context");
 Object.defineProperty(exports, "Context", { enumerable: true, get: function () { return __importDefault(Context_2).default; } });
 var Response_2 = require("./entities/Response");
 Object.defineProperty(exports, "Response", { enumerable: true, get: function () { return __importDefault(Response_2).default; } });
+//# sourceMappingURL=index.js.map

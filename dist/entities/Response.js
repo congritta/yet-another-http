@@ -4,6 +4,10 @@ const axios_1 = require("axios");
 const stream_1 = require("stream");
 const DEBUG = process.env.NODE_ENV !== "production";
 class Response {
+    body;
+    statusCode;
+    headers;
+    contentType;
     constructor(statusCode, body, headers) {
         this.statusCode = statusCode;
         this.headers = new axios_1.AxiosHeaders(headers);
@@ -28,3 +32,4 @@ class Response {
     }
 }
 exports.default = Response;
+//# sourceMappingURL=Response.js.map

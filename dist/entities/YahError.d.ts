@@ -8,3 +8,4 @@ export default class YahError extends Error {
     constructor(errorMessage: string, statusCode?: number, request?: http.IncomingMessage, response?: http.ServerResponse);
     responseWithError(): void;
 }
+//# sourceMappingURL=YahError.d.ts.map

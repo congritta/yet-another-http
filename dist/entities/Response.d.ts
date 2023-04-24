@@ -13,3 +13,4 @@ export default class Response {
         [key: string]: string;
     });
 }
+//# sourceMappingURL=Response.d.ts.map
