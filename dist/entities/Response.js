@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const axios_1 = require("axios");
 const stream_1 = require("stream");
 const DEBUG = process.env.NODE_ENV !== "production";
 class Response {
@@ -10,7 +9,7 @@ class Response {
     contentType;
     constructor(statusCode, body, headers) {
         this.statusCode = statusCode;
-        this.headers = new axios_1.AxiosHeaders(headers);
+        this.headers = headers ?? {};
         this.contentType = "application/octet-stream";
         if (Buffer.isBuffer(body) || body instanceof stream_1.Readable) {
             this.body = stream_1.Readable.from(body);
@@ -26,8 +25,8 @@ class Response {
         else {
             throw new Error("Unsupported data type");
         }
-        if (!this.headers.getContentType()) {
-            this.headers.setContentType(this.contentType);
+        if (!('content-type' in this.headers)) {
+            this.headers['content-type'] = this.contentType;
         }
     }
 }

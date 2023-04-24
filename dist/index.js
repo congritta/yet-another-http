@@ -87,7 +87,7 @@ class Server {
         if (!middleware) {
             throw new YahError_1.default("Middleware not found", 404, request, response);
         }
-        if (!middleware.slug || this._parseSlug(middleware.slug).method === request.method && this._parseSlug(middleware.slug).path === this._getPathFromUrl(request.url)) {
+        if (!middleware.slug || (this._parseSlug(middleware.slug).method === request.method && this._parseSlug(middleware.slug).path === this._getPathFromUrl(request.url))) {
             if (["POST", "PUT"].includes(request.method) && !$context.isParsed && middleware.formidableOptions) {
                 (new formidable_1.default.IncomingForm(middleware.formidableOptions)).parse(request, (error, fields, files) => {
                     if (error) {
@@ -120,7 +120,7 @@ class Server {
         }
     }
     _getPathFromUrl(url) {
-        return url.replace(/\w(\/)$/i, "").split("?")[0];
+        return url.replace(/\w(\/)$/iu, "").split("?")[0];
     }
     _generateSlug(method, url) {
         return `${method.toUpperCase()} ${this._getPathFromUrl(url)}`;

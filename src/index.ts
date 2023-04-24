@@ -12,13 +12,13 @@ import Context from "./entities/Context";
 import Response from "./entities/Response";
 import YahError from "./entities/YahError";
 
-export type HTTP_METHODS = "GET"|"POST"|"PUT"|"DELETE"
-export type MiddlewareResult = Response|null|void|Promise<MiddlewareResult>
+export type HTTP_METHODS = "GET" | "POST" | "PUT" | "DELETE"
+export type MiddlewareResult = Response | null | void | Promise<MiddlewareResult>
 export type MiddlewareHandler = (request: Context) => MiddlewareResult
 export type ErrorHandler = (error: YahError, request: http.IncomingMessage, response: http.ServerResponse) => void
 
 export interface Middleware {
-  slug: string|null,
+  slug: string | null,
   handler: MiddlewareHandler,
   formidableOptions?: formidable.Options
 }
@@ -28,7 +28,7 @@ export default class Server {
   readonly host: string;
   readonly server: http.Server;
   private readonly middlewares: Middleware[] = [];
-  private onErrorHandler: ErrorHandler|null = null;
+  private onErrorHandler: ErrorHandler | null = null;
 
   constructor(port: number, host = "127.0.0.1") {
     this.port = port;
@@ -135,8 +135,8 @@ export default class Server {
     }
 
     // Do middleware
-    if(!middleware.slug || this._parseSlug(middleware.slug).method === request.method && this._parseSlug(middleware.slug).path === this._getPathFromUrl(
-      request.url as string)) {
+    if(!middleware.slug || (this._parseSlug(middleware.slug).method === request.method && this._parseSlug(middleware.slug).path === this._getPathFromUrl(
+      request.url as string))) {
 
       // Handle requests with body
       if(["POST", "PUT"].includes(request.method as string) && !$context.isParsed && middleware.formidableOptions) {
@@ -183,7 +183,7 @@ export default class Server {
   }
 
   private _getPathFromUrl(url: string) {
-    return url.replace(/\w(\/)$/i, "").split("?")[0];
+    return url.replace(/\w(\/)$/iu, "").split("?")[0];
   }
 
   private _generateSlug(method: string, url: string) {

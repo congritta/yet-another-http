@@ -18,12 +18,12 @@
     "build": "tsc",
     "start": "NODE_ENV=\"production\" NODE_OPTIONS=\"--require $(pwd)/.pnp.cjs\" node .",
     "dev": "NODE_ENV=\"development\" nodemon",
-    "lint": "eslint"
+    "lint": "eslint",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@types/formidable": "^2.0.5",
     "@types/qs": "^6.9.7",
-    "axios": "^1.2.6",
     "formidable": "^2.1.1",
     "qs": "^6.11.0"
   },

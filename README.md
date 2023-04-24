@@ -25,7 +25,6 @@ https://yah.congritta.com
 * Can read POST data out of box. _JSON_, _multipart/form-data_, _urlencoded_ supported;
 * Plugin API;
 * Built-in error handling;
-* Source code is covered by tests (jest.js);
 * Automatic minimizes (on production) and prettify (on development) JSON HTTP responses
 
 ## How to install
