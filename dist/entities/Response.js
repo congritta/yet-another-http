@@ -12,7 +12,7 @@ class Response {
         this.headers = headers ?? {};
         this.contentType = "application/octet-stream";
         if (Buffer.isBuffer(body) || body instanceof stream_1.Readable) {
-            this.body = stream_1.Readable.from(body);
+            this.body = body;
         }
         else if (typeof body === "string") {
             this.contentType = "text/plain";

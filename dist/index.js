@@ -72,7 +72,10 @@ class Server {
                     }
                 }
                 if (middlewareResult.body instanceof stream_1.Readable) {
-                    middlewareResult.body.pipe(response);
+                    return middlewareResult.body.pipe(response);
+                }
+                else if (Buffer.isBuffer(middlewareResult.body)) {
+                    return stream_1.Readable.from(middlewareResult.body).pipe(response);
                 }
                 else {
                     return response.end(middlewareResult.body);

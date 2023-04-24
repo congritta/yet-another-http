@@ -22,7 +22,7 @@ export default class Response {
     this.contentType = "application/octet-stream";
 
     if(Buffer.isBuffer(body) || body instanceof Readable) {
-      this.body = Readable.from(body);
+      this.body = body;
     }
     else if(typeof body === "string") {
       this.contentType = "text/plain";

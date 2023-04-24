@@ -112,7 +112,10 @@ export default class Server {
 
         // Send Response body
         if(middlewareResult.body instanceof Readable) {
-          middlewareResult.body.pipe(response);
+          return middlewareResult.body.pipe(response);
+        }
+        else if(Buffer.isBuffer(middlewareResult.body)) {
+          return Readable.from(middlewareResult.body).pipe(response);
         }
         else {
           return response.end(middlewareResult.body);
@@ -130,6 +133,7 @@ export default class Server {
 
     // Check if middleware exists
     const middleware = this.middlewares[i];
+
     if(!middleware) {
       throw new YahError("Middleware not found", 404, request, response);
     }
