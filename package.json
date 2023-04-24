@@ -19,7 +19,7 @@
     "start": "NODE_ENV=\"production\" NODE_OPTIONS=\"--require $(pwd)/.pnp.cjs\" node .",
     "dev": "NODE_ENV=\"development\" nodemon",
     "lint": "eslint",
-    "prepare": "husky install"
+    "prepare": "yarn husky install"
   },
   "dependencies": {
     "@types/formidable": "^2.0.5",

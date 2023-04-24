@@ -1838,6 +1838,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"pinst@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "pinst@npm:3.0.0"
+  bin:
+    pinst: bin.js
+  checksum: 4ae48a6a60f79c37071233af51b4d91bfc85cfa3c12b66ccda60cdb642b4d14a4ab0cb3587afc55b1f6192cea1772a5e4822026a0d0d3528296edef00cc2d61f
+  languageName: node
+  linkType: hard
+
 "prelude-ls@npm:^1.2.1":
   version: 1.2.1
   resolution: "prelude-ls@npm:1.2.1"
@@ -2386,6 +2395,7 @@ __metadata:
     formidable: ^2.1.1
     husky: ^8.0.0
     nodemon: ^2.0.20
+    pinst: ^3.0.0
     qs: ^6.11.0
     ts-node: ^10.9.1
     typescript: ^4.9.5
